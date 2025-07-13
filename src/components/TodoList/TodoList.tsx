@@ -79,7 +79,7 @@ export default function TodoList() {
                   title={
                     todo.completed ? "Mark as incomplete" : "Mark as complete"
                   }
-                  className="hidden transition-colors duration-300 hover:text-green-600 focus:ring-green-600 group-focus-within:inline group-hover:inline"
+                  className="hidden transition-colors duration-300 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none group-focus-within:inline group-hover:inline"
                 >
                   {todo.completed ? (
                     <Circle size={16} />
@@ -87,15 +87,18 @@ export default function TodoList() {
                     <CircleCheck size={16} />
                   )}
                 </button>
+
                 <button
                   title="Edit"
-                  className="hidden text-sm text-gray-500 transition-colors duration-200 hover:text-green-600 focus:ring-green-600 group-focus-within:inline group-hover:inline"
+                  className="hidden text-sm text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none group-focus-within:inline group-hover:inline"
                 >
                   <Pencil size={16} />
                 </button>
+
                 <button
-                  className="hidden transition-colors duration-300 hover:text-red-500 focus:ring-green-600 group-focus-within:inline group-hover:inline"
+                  className="hidden transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none group-focus-within:inline group-hover:inline"
                   onClick={() => deleteTodo(todo.id)}
+                  title="Delete"
                 >
                   <Trash size={16} />
                 </button>
