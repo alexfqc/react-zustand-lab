@@ -1,5 +1,29 @@
 import { useState } from "react";
-import { Pencil, Trash, Circle, CircleCheck, ListTodo } from "lucide-react";
+import {
+  Pencil,
+  Trash,
+  Circle,
+  CircleCheck,
+  CircleX,
+  ListTodo,
+  Check,
+  GripVertical,
+} from "lucide-react";
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 type Todo = {
   id: number;
@@ -7,9 +31,47 @@ type Todo = {
   completed: boolean;
 };
 
+function SortableItem({
+  todo,
+  children,
+}: {
+  todo: Todo;
+  children: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition } =
+    useSortable({
+      id: todo.id,
+    });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+  };
+
+  return (
+    <li
+      ref={setNodeRef}
+      style={style}
+      {...attributes}
+      className="group flex items-center rounded border px-2 py-1"
+    >
+      <button
+        {...listeners} // só aplica os listeners de drag no handle
+        className="cursor-grab text-gray-400 hover:text-gray-600"
+        title="Drag to reorder"
+      >
+        <GripVertical size={16} />
+      </button>
+      {children}
+    </li>
+  );
+}
+
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState("");
+  const [editingId, setEditingId] = useState<number>(0);
+  const [editingValue, setEditingValue] = useState("");
 
   const addTodo = () => {
     if (newTodo.trim() !== "") {
@@ -30,7 +92,39 @@ export default function TodoList() {
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter((t) => t.id !== t.id));
+    setTodos(todos.filter((t) => t.id !== id));
+  };
+
+  const startEditing = (id: number, currentValue: string) => {
+    setEditingId(id);
+    setEditingValue(currentValue);
+  };
+
+  const saveEdit = () => {
+    if (editingValue.trim() === "") return;
+    setTodos(
+      todos.map((t) =>
+        t.id === editingId ? { ...t, title: editingValue } : t,
+      ),
+    );
+    setEditingId(0);
+    setEditingValue("");
+  };
+
+  const cancelEdit = () => {
+    setEditingId(0);
+    setEditingValue("");
+  };
+
+  const sensors = useSensors(useSensor(PointerSensor));
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (active.id !== over?.id) {
+      const oldIndex = todos.findIndex((t) => t.id === active.id);
+      const newIndex = todos.findIndex((t) => t.id === over?.id);
+      setTodos(arrayMove(todos, oldIndex, newIndex));
+    }
   };
 
   return (
@@ -60,52 +154,96 @@ export default function TodoList() {
             Add
           </button>
         </div>
-        <ul className="space-y-2">
-          {todos.map((todo) => (
-            <li
-              key={todo.id}
-              className="group flex items-center justify-between rounded border px-2 py-1"
-            >
-              <div className="flex flex-1 items-center gap-2">
-                <span
-                  className={`flex-1 ${
-                    todo.completed ? "text-gray-400 line-through" : ""
-                  }`}
-                >
-                  {todo.title}
-                </span>
-                <button
-                  onClick={() => toggleTodo(todo.id)}
-                  title={
-                    todo.completed ? "Mark as incomplete" : "Mark as complete"
-                  }
-                  className="hidden transition-colors duration-300 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none group-focus-within:inline group-hover:inline"
-                >
-                  {todo.completed ? (
-                    <Circle size={16} />
-                  ) : (
-                    <CircleCheck size={16} />
-                  )}
-                </button>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={todos} strategy={verticalListSortingStrategy}>
+            <ul className="space-y-2">
+              {todos.map((todo) => (
+                <SortableItem key={todo.id} todo={todo}>
+                  <div className="flex flex-1 items-center justify-between gap-2">
+                    {editingId === todo.id ? (
+                      <input
+                        type="text"
+                        value={editingValue}
+                        onChange={(e) => setEditingValue(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") saveEdit();
+                          if (e.key === "Escape") cancelEdit();
+                        }}
+                        autoFocus
+                        className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+                      />
+                    ) : (
+                      <span
+                        className={`flex-1 truncate ${
+                          todo.completed ? "text-gray-400 line-through" : ""
+                        }`}
+                      >
+                        {todo.title}
+                      </span>
+                    )}
 
-                <button
-                  title="Edit"
-                  className="hidden text-sm text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none group-focus-within:inline group-hover:inline"
-                >
-                  <Pencil size={16} />
-                </button>
-
-                <button
-                  className="hidden transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none group-focus-within:inline group-hover:inline"
-                  onClick={() => deleteTodo(todo.id)}
-                  title="Delete"
-                >
-                  <Trash size={16} />
-                </button>
-              </div>
-            </li>
-          ))}
-        </ul>
+                    <div className="flex shrink-0 items-center gap-2">
+                      {editingId === todo.id ? (
+                        <>
+                          <button
+                            onClick={() => cancelEdit()}
+                            title="Cancel edit"
+                            className="transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none"
+                          >
+                            <CircleX size={16} />
+                          </button>
+                          <button
+                            onClick={() => saveEdit()}
+                            title="Save edit"
+                            className="text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
+                          >
+                            <Check size={16} />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <button
+                            onClick={() => toggleTodo(todo.id)}
+                            title={
+                              todo.completed
+                                ? "Mark as incomplete"
+                                : "Mark as complete"
+                            }
+                            className="transition-colors duration-300 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
+                          >
+                            {todo.completed ? (
+                              <Circle size={16} />
+                            ) : (
+                              <CircleCheck size={16} />
+                            )}
+                          </button>
+                          <button
+                            onClick={() => startEditing(todo.id, todo.title)}
+                            title="Edit"
+                            className="text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
+                          >
+                            <Pencil size={16} />
+                          </button>
+                          <button
+                            onClick={() => deleteTodo(todo.id)}
+                            title="Delete"
+                            className="transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none"
+                          >
+                            <Trash size={16} />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </SortableItem>
+              ))}
+            </ul>
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
