@@ -44,7 +44,7 @@ export default [
     },
   },
 
-  // Config para arquivos JS/JSX
+  // setup for JS/JSX
   {
     files: ["**/*.{js,jsx}"],
     languageOptions: {
