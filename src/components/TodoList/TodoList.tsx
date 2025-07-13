@@ -23,6 +23,7 @@ import {
 } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
 import TodoInput from "./TodoInput";
+import TodoItem from "./TodoItem";
 
 type Todo = {
   id: number;
@@ -111,82 +112,17 @@ export default function TodoList() {
             <ul className="space-y-2">
               {todos.map((todo) => (
                 <SortableItem key={todo.id} id={todo.id}>
-                  <div className="flex flex-1 items-center justify-between gap-2">
-                    {editingId === todo.id ? (
-                      <input
-                        type="text"
-                        value={editingValue}
-                        onChange={(e) => setEditingValue(e.target.value)}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") saveEdit();
-                          if (e.key === "Escape") cancelEdit();
-                        }}
-                        autoFocus
-                        className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                      />
-                    ) : (
-                      <span
-                        className={`flex-1 truncate ${
-                          todo.completed ? "text-gray-400 line-through" : ""
-                        }`}
-                      >
-                        {todo.title}
-                      </span>
-                    )}
-
-                    <div className="flex shrink-0 items-center gap-2">
-                      {editingId === todo.id ? (
-                        <>
-                          <button
-                            onClick={() => cancelEdit()}
-                            title="Cancel edit"
-                            className="transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none"
-                          >
-                            <CircleX size={16} />
-                          </button>
-                          <button
-                            onClick={() => saveEdit()}
-                            title="Save edit"
-                            className="text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
-                          >
-                            <Check size={16} />
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <button
-                            onClick={() => toggleTodo(todo.id)}
-                            title={
-                              todo.completed
-                                ? "Mark as incomplete"
-                                : "Mark as complete"
-                            }
-                            className="transition-colors duration-300 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
-                          >
-                            {todo.completed ? (
-                              <Circle size={16} />
-                            ) : (
-                              <CircleCheck size={16} />
-                            )}
-                          </button>
-                          <button
-                            onClick={() => startEditing(todo.id, todo.title)}
-                            title="Edit"
-                            className="text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
-                          >
-                            <Pencil size={16} />
-                          </button>
-                          <button
-                            onClick={() => deleteTodo(todo.id)}
-                            title="Delete"
-                            className="transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none"
-                          >
-                            <Trash size={16} />
-                          </button>
-                        </>
-                      )}
-                    </div>
-                  </div>
+                  <TodoItem
+                    todo={todo}
+                    isEditing={editingId === todo.id}
+                    editingValue={editingValue}
+                    setEditingValue={setEditingValue}
+                    startEditing={startEditing}
+                    saveEdit={saveEdit}
+                    cancelEdit={cancelEdit}
+                    toggleTodo={toggleTodo}
+                    deleteTodo={deleteTodo}
+                  />
                 </SortableItem>
               ))}
             </ul>
