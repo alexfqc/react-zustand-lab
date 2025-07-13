@@ -5,36 +5,56 @@ import reactRefresh from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
 import prettier from "eslint-config-prettier";
 import { globalIgnores } from "eslint/config";
-import noExplicitAny from "@typescript-eslint/eslint-plugin/dist/rules/no-explicit-any";
 
-export default tseslint.config([
-  globalIgnores(["dist"]),
+export default [
+  // Ignora dist e node_modules
+  globalIgnores(["dist", "node_modules"]),
+
+  // Config para arquivos TS/TSX
   {
     files: ["**/*.{ts,tsx}"],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommendedTypeChecked,
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
-      reactHooks.configs["recommended-latest"],
-      reactRefresh.configs.vite,
-      prettier,
-    ],
     languageOptions: {
+      parser: tseslint.parser,
       ecmaVersion: 2020,
+      sourceType: "module",
       globals: globals.browser,
     },
-  },
-  {
-    files: ["**/*.tsx"],
+    plugins: {
+      "@typescript-eslint": tseslint.plugin,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
+    },
     rules: {
-      "prettier/prettier": [
-        "warn",
-        {
-          printWidth: 80,
-          proseWrap: "always",
-        },
-      ],
+      // TypeScript recommended + strict
+      ...tseslint.configs.recommended.rules,
+      ...tseslint.configs.strictTypeChecked.rules,
+      ...tseslint.configs.stylisticTypeChecked.rules,
+
+      // React Hooks recommended
+      ...reactHooks.configs["recommended-latest"].rules,
+
+      // React Refresh (for Vite HMR)
+      ...reactRefresh.configs.vite.rules,
+
+      // Prettier (disable conflicting formatting rules)
+      ...prettier.rules,
+
+      // Custom Rules
+      "@typescript-eslint/no-explicit-any": "error",
     },
   },
-]);
+
+  // Config para arquivos JS/JSX
+  {
+    files: ["**/*.{js,jsx}"],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: "module",
+      globals: globals.browser,
+    },
+    rules: {
+      ...js.configs.recommended.rules,
+      ...prettier.rules,
+    },
+  },
+];
