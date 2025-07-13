@@ -7,7 +7,6 @@ import {
   CircleX,
   ListTodo,
   Check,
-  GripVertical,
 } from "lucide-react";
 import {
   DndContext,
@@ -20,52 +19,15 @@ import {
 import {
   arrayMove,
   SortableContext,
-  useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import SortableItem from "./SortableItem";
 
 type Todo = {
   id: number;
   title: string;
   completed: boolean;
 };
-
-function SortableItem({
-  todo,
-  children,
-}: {
-  todo: Todo;
-  children: React.ReactNode;
-}) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({
-      id: todo.id,
-    });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <li
-      ref={setNodeRef}
-      style={style}
-      {...attributes}
-      className="group flex items-center rounded border px-2 py-1"
-    >
-      <button
-        {...listeners} // só aplica os listeners de drag no handle
-        className="cursor-grab text-gray-400 hover:text-gray-600"
-        title="Drag to reorder"
-      >
-        <GripVertical size={16} />
-      </button>
-      {children}
-    </li>
-  );
-}
 
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -162,7 +124,7 @@ export default function TodoList() {
           <SortableContext items={todos} strategy={verticalListSortingStrategy}>
             <ul className="space-y-2">
               {todos.map((todo) => (
-                <SortableItem key={todo.id} todo={todo}>
+                <SortableItem key={todo.id} id={todo.id}>
                   <div className="flex flex-1 items-center justify-between gap-2">
                     {editingId === todo.id ? (
                       <input
