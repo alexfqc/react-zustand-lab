@@ -23,26 +23,32 @@ export default function TodoList() {
   };
 
   const toggleTodo = (id: number) => {
-    setTodos(todos.map(t => t.id === id ? { ...t, completed: !t.completed } : t));
+    setTodos(
+      todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+    );
   };
 
   const deleteTodo = (id: number) => {
-    setTodos(todos.filter(t => t.id !== id));
+    setTodos(todos.filter((t) => t.id !== id));
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border rounded shadow">
-      <h1 className="text-2xl font-bold mb-4">📝 Todo List</h1>
-      <div className="flex gap-2 mb-4">
+    <div className="mx-auto mt-10 max-w-md rounded border p-4 shadow">
+      <h1 className="mb-4 text-2xl font-bold">📝 Todo List</h1>
+      <div className="mb-4 flex gap-2">
         <input
           type="text"
-          className="flex-1 border rounded px-2 py-1"
+          className="flex-1 rounded border px-2 py-1"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
           placeholder="Add a new task..."
         />
         <button
-          className={`${newTodo.trim() ? 'bg-green-500 cursor-pointer hover:bg-green-600 transition-colors duration-300' : 'bg-green-300 cursor-default'} text-white px-3 py-1 rounded`}
+          className={`${
+            newTodo.trim()
+              ? "cursor-pointer bg-green-500 transition-colors duration-300 hover:bg-green-600"
+              : "cursor-default bg-green-300"
+          } rounded px-3 py-1 text-white`}
           onClick={addTodo}
           disabled={!newTodo.trim()}
         >
@@ -53,16 +59,16 @@ export default function TodoList() {
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className="flex justify-between items-center border px-2 py-1 rounded"
+            className="flex items-center justify-between rounded border px-2 py-1"
           >
             <span
               onClick={() => toggleTodo(todo.id)}
-              className={`cursor-pointer ${todo.completed ? "line-through text-gray-400" : ""}`}
+              className={`cursor-pointer ${todo.completed ? "text-gray-400 line-through" : ""}`}
             >
               {todo.title}
             </span>
             <button
-              className="text-red-500 hover:text-red-700 transition-colors duration-300"
+              className="text-red-500 transition-colors duration-300 hover:text-red-700"
               onClick={() => deleteTodo(todo.id)}
             >
               ✕

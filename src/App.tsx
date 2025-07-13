@@ -1,7 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import TodoList from "./components/TodoList/TodoList";
 
-
 function App() {
   return (
     <Routes>
