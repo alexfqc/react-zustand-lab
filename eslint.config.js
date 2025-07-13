@@ -7,10 +7,10 @@ import prettier from "eslint-config-prettier";
 import { globalIgnores } from "eslint/config";
 
 export default [
-  // Ignora dist e node_modules
+  // Ignore dist and node_modules
   globalIgnores(["dist", "node_modules"]),
 
-  // Config para arquivos TS/TSX
+  // Config for TS/TSX
   {
     files: ["**/*.{ts,tsx}"],
     languageOptions: {
