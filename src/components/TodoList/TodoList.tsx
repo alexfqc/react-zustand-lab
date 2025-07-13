@@ -22,6 +22,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import SortableItem from "./SortableItem";
+import TodoInput from "./TodoInput";
 
 type Todo = {
   id: number;
@@ -96,26 +97,11 @@ export default function TodoList() {
           <ListTodo size={28} className="text-green-500" />
           Todo List
         </h1>
-        <div className="mb-4 flex gap-2">
-          <input
-            type="text"
-            className="flex-1 rounded border border-gray-300 px-2 py-1 transition-colors duration-300 hover:border-green-400 focus:outline-none focus:ring-1 focus:ring-green-500"
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-            placeholder="Add a new task..."
-          />
-          <button
-            className={`${
-              newTodo.trim()
-                ? "cursor-pointer bg-green-500 transition-colors duration-300 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-600"
-                : "cursor-default bg-green-300"
-            } rounded px-3 py-1 text-white`}
-            onClick={addTodo}
-            disabled={!newTodo.trim()}
-          >
-            Add
-          </button>
-        </div>
+        <TodoInput
+          newTodo={newTodo}
+          setNewTodo={setNewTodo}
+          addTodo={addTodo}
+        />
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
