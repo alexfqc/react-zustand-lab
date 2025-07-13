@@ -13,6 +13,10 @@ import {
   SortableContext,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import {
+  restrictToVerticalAxis,
+  restrictToParentElement,
+} from "@dnd-kit/modifiers";
 import SortableItem from "./SortableItem";
 import TodoInput from "./TodoInput";
 import TodoItem from "./TodoItem";
@@ -105,6 +109,7 @@ export default function TodoList() {
           sensors={sensors}
           collisionDetection={closestCenter}
           onDragEnd={handleDragEnd}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
         >
           <SortableContext items={todos} strategy={verticalListSortingStrategy}>
             <ul className="space-y-2">
