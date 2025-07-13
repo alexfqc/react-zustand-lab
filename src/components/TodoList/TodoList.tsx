@@ -32,6 +32,7 @@ export default function TodoList() {
   const [newTodo, setNewTodo] = useState("");
   const [editingId, setEditingId] = useState<number>(0);
   const [editingValue, setEditingValue] = useState("");
+  const [isDragging, setIsDragging] = useState(false);
 
   const addTodo = () => {
     if (newTodo.trim() !== "") {
@@ -105,14 +106,29 @@ export default function TodoList() {
           setNewTodo={setNewTodo}
           addTodo={addTodo}
         />
+        {todos.length === 0 ? (
+          <li className="rounded border border-dashed border-gray-300 p-2 text-center text-gray-400">
+            No todos yet – add one!
+          </li>
+        ) : null}
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          onDragEnd={handleDragEnd}
+          onDragStart={() => setIsDragging(true)}
+          onDragEnd={(event: DragEndEvent) => {
+            handleDragEnd(event);
+            setIsDragging(false);
+          }}
           modifiers={[restrictToVerticalAxis, restrictToParentElement]}
         >
           <SortableContext items={todos} strategy={verticalListSortingStrategy}>
-            <ul className="space-y-2">
+            <ul
+              className={`space-y-2 rounded border p-2 transition-colors duration-300 ${
+                isDragging
+                  ? "border-2 border-dashed border-green-400 bg-green-50"
+                  : "border-transparent"
+              }`}
+            >
               {useMemo(
                 () =>
                   todos.map((todo) => (

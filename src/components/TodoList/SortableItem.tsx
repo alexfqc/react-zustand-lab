@@ -16,7 +16,11 @@ export default function SortableItem({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-  };
+    zIndex: 50,
+    boxShadow: transform ? "0 8px 20px rgba(0,0,0,0.2)" : undefined,
+    scale: transform ? 1.05 : 1,
+    backgroundColor: "white",
+  } as React.CSSProperties;
 
   return (
     <li
