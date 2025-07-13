@@ -1,10 +1,12 @@
+import { Routes, Route } from "react-router-dom";
+import TodoList from "./components/TodoList/TodoList";
+
+
 function App() {
   return (
-    <div className="flex h-screen items-center justify-center bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-600">
-        🚀 Tailwind working!
-      </h1>
-    </div>
+    <Routes>
+      <Route path="/" element={<TodoList />} />
+    </Routes>
   );
 }
 
