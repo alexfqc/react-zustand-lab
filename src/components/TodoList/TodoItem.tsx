@@ -6,6 +6,7 @@ import {
   CircleX,
   Check,
 } from "lucide-react";
+import { GREEN_OUTLINE_CLASSES } from "./constants";
 
 type Todo = {
   id: number;
@@ -78,7 +79,7 @@ export default function TodoItem({
             <button
               onClick={saveEdit}
               title="Save edit"
-              className="text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
+              className={`text-gray-500 transition-colors duration-200 hover:text-green-600 ${GREEN_OUTLINE_CLASSES}`}
             >
               <Check size={16} />
             </button>
@@ -88,7 +89,7 @@ export default function TodoItem({
             <button
               onClick={() => toggleTodo(todo.id)}
               title={todo.completed ? "Mark as incomplete" : "Mark as complete"}
-              className="transition-colors duration-300 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
+              className={`transition-colors duration-300 hover:text-green-600 ${GREEN_OUTLINE_CLASSES}`}
             >
               {todo.completed ? (
                 <Circle size={16} />
@@ -99,7 +100,7 @@ export default function TodoItem({
             <button
               onClick={() => startEditing(todo.id, todo.title)}
               title="Edit"
-              className="text-gray-500 transition-colors duration-200 hover:text-green-600 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-green-500 active:outline-none"
+              className={`text-gray-500 transition-colors duration-200 hover:text-green-600 ${GREEN_OUTLINE_CLASSES}`}
             >
               <Pencil size={16} />
             </button>

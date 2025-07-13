@@ -94,6 +94,15 @@ export default function TodoList() {
     }
   };
 
+  const moveTodo = useCallback(
+    (fromIndex: number, toIndex: number) => {
+      if (toIndex >= 0 || toIndex < todos.length) {
+        setTodos((prev) => arrayMove(prev, fromIndex, toIndex));
+      }
+    },
+    [todos],
+  );
+
   return (
     <div className="mx-auto flex w-[480px] max-w-full flex-col justify-center p-2 md:pt-10">
       <div className="max-w-full rounded border p-4 shadow">
@@ -131,8 +140,13 @@ export default function TodoList() {
             >
               {useMemo(
                 () =>
-                  todos.map((todo) => (
-                    <SortableItem key={todo.id} id={todo.id}>
+                  todos.map((todo, index) => (
+                    <SortableItem
+                      key={todo.id}
+                      id={todo.id}
+                      moveTodo={moveTodo}
+                      index={index}
+                    >
                       <TodoItem
                         todo={todo}
                         isEditing={editingId === todo.id}
@@ -155,6 +169,7 @@ export default function TodoList() {
                   cancelEdit,
                   toggleTodo,
                   deleteTodo,
+                  moveTodo,
                 ],
               )}
             </ul>
