@@ -1,13 +1,5 @@
-import { useState } from "react";
-import {
-  Pencil,
-  Trash,
-  Circle,
-  CircleCheck,
-  CircleX,
-  ListTodo,
-  Check,
-} from "lucide-react";
+import { useState, useCallback, useMemo } from "react";
+import { ListTodo } from "lucide-react";
 import {
   DndContext,
   closestCenter,
@@ -49,22 +41,28 @@ export default function TodoList() {
     }
   };
 
-  const toggleTodo = (id: number) => {
-    setTodos(
-      todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
-    );
-  };
+  const toggleTodo = useCallback(
+    (id: number) => {
+      setTodos(
+        todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
+      );
+    },
+    [todos],
+  );
 
-  const deleteTodo = (id: number) => {
-    setTodos(todos.filter((t) => t.id !== id));
-  };
+  const deleteTodo = useCallback(
+    (id: number) => {
+      setTodos(todos.filter((t) => t.id !== id));
+    },
+    [todos],
+  );
 
-  const startEditing = (id: number, currentValue: string) => {
+  const startEditing = useCallback((id: number, currentValue: string) => {
     setEditingId(id);
     setEditingValue(currentValue);
-  };
+  }, []);
 
-  const saveEdit = () => {
+  const saveEdit = useCallback(() => {
     if (editingValue.trim() === "") return;
     setTodos(
       todos.map((t) =>
@@ -73,12 +71,12 @@ export default function TodoList() {
     );
     setEditingId(0);
     setEditingValue("");
-  };
+  }, [todos, editingId, editingValue]);
 
-  const cancelEdit = () => {
+  const cancelEdit = useCallback(() => {
     setEditingId(0);
     setEditingValue("");
-  };
+  }, []);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -110,21 +108,34 @@ export default function TodoList() {
         >
           <SortableContext items={todos} strategy={verticalListSortingStrategy}>
             <ul className="space-y-2">
-              {todos.map((todo) => (
-                <SortableItem key={todo.id} id={todo.id}>
-                  <TodoItem
-                    todo={todo}
-                    isEditing={editingId === todo.id}
-                    editingValue={editingValue}
-                    setEditingValue={setEditingValue}
-                    startEditing={startEditing}
-                    saveEdit={saveEdit}
-                    cancelEdit={cancelEdit}
-                    toggleTodo={toggleTodo}
-                    deleteTodo={deleteTodo}
-                  />
-                </SortableItem>
-              ))}
+              {useMemo(
+                () =>
+                  todos.map((todo) => (
+                    <SortableItem key={todo.id} id={todo.id}>
+                      <TodoItem
+                        todo={todo}
+                        isEditing={editingId === todo.id}
+                        editingValue={editingValue}
+                        setEditingValue={setEditingValue}
+                        startEditing={startEditing}
+                        saveEdit={saveEdit}
+                        cancelEdit={cancelEdit}
+                        toggleTodo={toggleTodo}
+                        deleteTodo={deleteTodo}
+                      />
+                    </SortableItem>
+                  )),
+                [
+                  todos,
+                  editingId,
+                  editingValue,
+                  startEditing,
+                  saveEdit,
+                  cancelEdit,
+                  toggleTodo,
+                  deleteTodo,
+                ],
+              )}
             </ul>
           </SortableContext>
         </DndContext>
