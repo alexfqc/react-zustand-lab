@@ -53,7 +53,7 @@ function TodoItem({ todo }: { todo: Todo }) {
           className={`flex-1 truncate ${
             todo.completed ? "text-gray-400 line-through" : ""
           }`}
-          aria-label={`Todo title: ${todo.title}`}
+          aria-label={`Todo title: ${todo.title}${todo.completed ? " completed" : ""}`}
         >
           {todo.title}
         </span>
@@ -88,8 +88,8 @@ function TodoItem({ todo }: { todo: Todo }) {
               aria-pressed={todo.completed}
               aria-label={
                 todo.completed
-                  ? "Mark todo as incomplete"
-                  : "Mark todo as complete"
+                  ? `Mark todo ${todo.title} as incomplete`
+                  : `Mark todo ${todo.title} as complete`
               }
             >
               {todo.completed ? (

@@ -31,10 +31,10 @@ describe("TodoList", () => {
     const input = screen.getByTestId("add-todo-input");
     const addButton = screen.getByTestId("add-todo-button");
 
-    await userEvent.type(input, "Coffee specialty coffee");
+    await userEvent.type(input, "Buy specialty coffee");
     await userEvent.click(addButton);
 
-    expect(screen.getByText("Coffee specialty coffee")).toBeInTheDocument();
+    expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
   });
 
   it("edits a todo", async () => {
@@ -45,23 +45,23 @@ describe("TodoList", () => {
     const input = screen.getByTestId("add-todo-input");
     const addButton = screen.getByTestId("add-todo-button");
 
-    await userEvent.type(input, "Coffee specialty coffee");
+    await userEvent.type(input, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const editButton = screen.getByRole("button", {
-      name: "Edit todo: Coffee specialty coffee",
+      name: "Edit todo: Buy specialty coffee",
     });
 
     await userEvent.click(editButton);
 
     const editInput = screen.getByRole("textbox", {
-      name: "Edit input todo: Coffee specialty coffee",
+      name: "Edit input todo: Buy specialty coffee",
     });
     await userEvent.clear(editInput);
     await userEvent.type(editInput, "Coffee latte");
 
     const saveButton = screen.getByRole("button", {
-      name: "Confirm edit todo: Coffee specialty coffee",
+      name: "Confirm edit todo: Buy specialty coffee",
     });
     await userEvent.click(saveButton);
 
@@ -77,16 +77,38 @@ describe("TodoList", () => {
     const input = screen.getByTestId("add-todo-input");
     const addButton = screen.getByTestId("add-todo-button");
 
-    await userEvent.type(input, "Coffee specialty coffee");
+    await userEvent.type(input, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const deleteButton = screen.getByRole("button", {
-      name: "Delete todo: Coffee specialty coffee",
+      name: "Delete todo: Buy specialty coffee",
     });
     await userEvent.click(deleteButton);
 
-    expect(
-      screen.queryByText("Coffee specialty coffee"),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Buy specialty coffee")).not.toBeInTheDocument();
+  });
+
+  it("marks a todo as completed", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
+
+    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.click(addButton);
+
+    const markButton = screen.getByRole("button", {
+      name: "Mark todo Buy specialty coffee as complete",
+    });
+
+    await userEvent.click(markButton);
+
+    const completedMarkButton = screen.getByRole("button", {
+      name: "Mark todo Buy specialty coffee as incomplete",
+    });
+
+    expect(completedMarkButton).toBeInTheDocument();
   });
 });
