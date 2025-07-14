@@ -37,6 +37,48 @@ describe("TodoList", () => {
     expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
   });
 
+  it("adds a new todo pressing enter", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+    const input = screen.getByTestId("add-todo-input");
+
+    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.keyboard("{Enter}");
+
+    expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+  });
+
+  it("edits a todo pressing enter", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
+
+    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.click(addButton);
+
+    const editButton = screen.getByRole("button", {
+      name: "Edit todo: Buy specialty coffee",
+    });
+
+    await userEvent.click(editButton);
+
+    const editInput = screen.getByRole("textbox", {
+      name: "Edit input todo: Buy specialty coffee",
+    });
+    await userEvent.clear(editInput);
+    await userEvent.type(editInput, "Coffee latte");
+
+    await userEvent.keyboard("{Enter}");
+
+    const todoItem = screen.getByText("Coffee latte");
+
+    expect(todoItem).toBeInTheDocument();
+  });
+
   it("edits a todo", async () => {
     await act(async () => {
       render(<TodoList />);
@@ -66,6 +108,69 @@ describe("TodoList", () => {
     await userEvent.click(saveButton);
 
     const todoItem = screen.getByText("Coffee latte");
+
+    expect(todoItem).toBeInTheDocument();
+  });
+
+  it("cancels edit todo", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
+
+    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.click(addButton);
+
+    const editButton = screen.getByRole("button", {
+      name: "Edit todo: Buy specialty coffee",
+    });
+
+    await userEvent.click(editButton);
+
+    const editInput = screen.getByRole("textbox", {
+      name: "Edit input todo: Buy specialty coffee",
+    });
+    await userEvent.clear(editInput);
+    await userEvent.type(editInput, "Coffee latte");
+
+    const cancelButton = screen.getByRole("button", {
+      name: "Cancel edit todo: Buy specialty coffee",
+    });
+    await userEvent.click(cancelButton);
+
+    const todoItem = screen.getByText("Buy specialty coffee");
+
+    expect(todoItem).toBeInTheDocument();
+  });
+
+  it("cancels edit todo pressing scape", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
+
+    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.click(addButton);
+
+    const editButton = screen.getByRole("button", {
+      name: "Edit todo: Buy specialty coffee",
+    });
+
+    await userEvent.click(editButton);
+
+    const editInput = screen.getByRole("textbox", {
+      name: "Edit input todo: Buy specialty coffee",
+    });
+    await userEvent.clear(editInput);
+    await userEvent.type(editInput, "Coffee latte");
+
+    await userEvent.keyboard("{Escape}");
+
+    const todoItem = screen.getByText("Buy specialty coffee");
 
     expect(todoItem).toBeInTheDocument();
   });
