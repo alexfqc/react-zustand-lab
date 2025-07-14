@@ -1,11 +1,11 @@
-import { type ReactNode } from "react";
+import { type ReactNode, memo } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { GREEN_OUTLINE_CLASSES } from "./constants";
 import { useTodoStore } from "../../store/useTodoStore";
 
-export default function SortableItem({
+function SortableItem({
   id,
   children,
   index,
@@ -59,3 +59,5 @@ export default function SortableItem({
     </li>
   );
 }
+
+export default memo(SortableItem);

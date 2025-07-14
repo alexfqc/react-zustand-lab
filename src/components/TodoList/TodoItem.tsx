@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   Circle,
   CircleCheck,
@@ -15,7 +16,7 @@ type Todo = {
   completed: boolean;
 };
 
-export default function TodoItem({ todo }: { todo: Todo }) {
+function TodoItem({ todo }: { todo: Todo }) {
   const {
     editingId,
     cancelEdit,
@@ -115,3 +116,5 @@ export default function TodoItem({ todo }: { todo: Todo }) {
     </div>
   );
 }
+
+export default memo(TodoItem);
