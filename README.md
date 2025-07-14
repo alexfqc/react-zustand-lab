@@ -7,7 +7,8 @@ in:
 ✅ Zustand 4 (state management)  
 ✅ TypeScript 5 (type safety)  
 ✅ Tailwind CSS 3 (responsive and stylish design)  
-✅ react-router-dom 6 (routing)
+✅ react-router-dom 6 (routing)  
+✅ ARIA roles and attributes for accessibility
 
 With a focus on **component architecture, optimizations, and modern best
 practices**.
@@ -36,7 +37,7 @@ practices**.
 - ✅ **Reorder tasks with drag and drop** (mouse or keyboard)
 - ✅ **Persist state in localStorage** using Zustand + `middleware/persist`
 - ✅ **Initial load with Suspense** and animated fallback using Tailwind
-- ✅ **Accessibility (keyboard focus, ARIA roles)**
+- ✅ **Accessibility enhancements (ARIA roles and attributes, keyboard focus)**
 - ✅ **DnD animation support**
 
 ---
@@ -59,6 +60,29 @@ practices**.
   - Used Zustand’s `onRehydrateStorage` to simulate a 1.5s delay.
   - While rehydrating, the app displays a `<Loading />` fallback with
     `Suspense`.
+
+---
+
+## ♿ Accessibility Highlights
+
+This app was built with **screen reader and keyboard users in mind**:
+
+- 🔹 **List semantics**:
+  - `role="list"` on `<ul>`
+  - `role="listitem"` on each `<li>`
+  - Clear `aria-label`s describing each todo
+
+- 🔹 **Buttons with descriptive labels**:
+  - `aria-label="Add a new task"`
+  - `aria-label="Delete todo: Buy milk"`
+
+- 🔹 **Loading feedback**:
+  - `role="status"`
+  - `aria-busy="true"` for screen reader announcement during data rehydration
+
+- 🔹 **Drag and Drop accessibility**:
+  - `aria-label="Drag todo: Buy milk"`
+  - Keyboard support: reorder todos using ArrowUp / ArrowDown
 
 ---
 
