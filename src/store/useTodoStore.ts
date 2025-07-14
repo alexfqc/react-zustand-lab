@@ -12,6 +12,7 @@ type TodoState = {
   editingId: number;
   editingValue: string;
   inputText: string;
+  hydrated: boolean;
   addTodo: () => void;
   setTodos: (todos: Todo[]) => void;
   deleteTodo: (id: number) => void;
@@ -23,6 +24,7 @@ type TodoState = {
   cancelEdit: () => void;
   setInputText: (text: string) => void;
   reorderTodos: (fromIndex: number, toIndex: number) => void;
+  setHydrated: (value: boolean) => void;
 };
 
 export const useTodoStore = create<TodoState>()(
@@ -32,6 +34,9 @@ export const useTodoStore = create<TodoState>()(
       editingId: 0,
       editingValue: "",
       inputText: "",
+      hydrated: false /* state used for simulating delay and triggering suspense */,
+
+      setHydrated: (value) => set(() => ({ hydrated: value })),
 
       addTodo: () => {
         set((state) => {
@@ -108,6 +113,14 @@ export const useTodoStore = create<TodoState>()(
       partialize: (state) => ({
         todos: state.todos,
       }),
+      onRehydrateStorage: () => (state) => {
+        console.log("⏳ Rehydrating...");
+        // Simulates a delay for suspense
+        setTimeout(() => {
+          console.log("✅ Rehydrated!");
+          state?.setHydrated(true);
+        }, 1500); // 👈 1.5s de delay fake
+      },
     },
   ),
 );

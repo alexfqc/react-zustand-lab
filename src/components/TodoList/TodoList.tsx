@@ -1,47 +1,12 @@
-import { useState } from "react";
+import { Suspense } from "react";
 import { ListTodo } from "lucide-react";
-import {
-  DndContext,
-  closestCenter,
-  PointerSensor,
-  useSensor,
-  useSensors,
-  type DragEndEvent,
-} from "@dnd-kit/core";
-import {
-  arrayMove,
-  SortableContext,
-  verticalListSortingStrategy,
-} from "@dnd-kit/sortable";
-import {
-  restrictToVerticalAxis,
-  restrictToParentElement,
-} from "@dnd-kit/modifiers";
-import SortableItem from "./SortableItem";
 import TodoInput from "./TodoInput";
-import TodoItem from "./TodoItem";
+import TodoDnD from "./TodoDnD";
+import Loading from "./Loading";
 import { useTodoStore } from "../../store/useTodoStore";
 
-type Todo = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
-
 export default function TodoList() {
-  const { todos, setTodos } = useTodoStore();
-  const [isDragging, setIsDragging] = useState(false);
-
-  const sensors = useSensors(useSensor(PointerSensor));
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-    if (active.id !== over?.id) {
-      const oldIndex = todos.findIndex((t) => t.id === active.id);
-      const newIndex = todos.findIndex((t) => t.id === over?.id);
-      setTodos(arrayMove(todos, oldIndex, newIndex));
-    }
-  };
+  const { todos } = useTodoStore();
 
   return (
     <div className="mx-auto flex w-[480px] max-w-full flex-col justify-center p-2 md:pt-10">
@@ -56,32 +21,9 @@ export default function TodoList() {
             {"No todos yet \u2013 add one!"}
           </li>
         ) : null}
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragStart={() => setIsDragging(true)}
-          onDragEnd={(event: DragEndEvent) => {
-            handleDragEnd(event);
-            setIsDragging(false);
-          }}
-          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
-        >
-          <SortableContext items={todos} strategy={verticalListSortingStrategy}>
-            <ul
-              className={`space-y-2 rounded border p-2 transition-colors duration-300 ${
-                isDragging
-                  ? "border-2 border-dashed border-green-400 bg-green-50"
-                  : "border-transparent"
-              }`}
-            >
-              {todos.map((todo: Todo, index: number) => (
-                <SortableItem key={todo.id} id={todo.id} index={index}>
-                  <TodoItem todo={todo} />
-                </SortableItem>
-              ))}
-            </ul>
-          </SortableContext>
-        </DndContext>
+        <Suspense fallback={<Loading />}>
+          <TodoDnD />
+        </Suspense>
       </div>
     </div>
   );
