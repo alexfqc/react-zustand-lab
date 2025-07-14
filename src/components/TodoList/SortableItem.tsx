@@ -33,7 +33,7 @@ export default function SortableItem({
       style={style}
       {...attributes}
       className={`group flex items-center rounded border px-2 py-1 ${GREEN_OUTLINE_CLASSES} cursor-default`}
-      onKeyDown={(e) => {
+      onKeyDown={(e: React.KeyboardEvent<HTMLLIElement>) => {
         if (e.key === "ArrowDown") {
           e.preventDefault();
           moveTodo(index, index + 1);
