@@ -1,7 +1,6 @@
 # 📝 React Zustand Lab
 
-A technical project created as part of an assessment to demonstrate proficiency
-in:
+A project which uses the following technologies:
 
 ✅ React 18 (Concurrent Features)  
 ✅ Zustand 4 (state management)  
@@ -17,17 +16,21 @@ practices**.
 
 ## 📦 Tech Stack & Versions
 
-| Package            | Version  |
-| ------------------ | -------- |
-| React              | 18.x     |
-| TypeScript         | 5.x      |
-| Zustand            | 4.x      |
-| Tailwind CSS       | 3.x      |
-| react-router-dom   | 6.x      |
-| @dnd-kit/core      | ^7.x     |
-| @dnd-kit/sortable  | ^7.x     |
-| @dnd-kit/modifiers | ^7.x     |
-| lucide-react       | ^0.525.x |
+| Package                     | Version  |
+| --------------------------- | -------- |
+| React                       | 18.x     |
+| TypeScript                  | 5.x      |
+| Zustand                     | 4.x      |
+| Tailwind CSS                | 3.x      |
+| react-router-dom            | 6.x      |
+| @dnd-kit/core               | ^7.x     |
+| @dnd-kit/sortable           | ^7.x     |
+| @dnd-kit/modifiers          | ^7.x     |
+| lucide-react                | ^0.525.x |
+| vitest                      | ^3.x     |
+| @testing-library/react      | ^16.x    |
+| @testing-library/jest-dom   | ^6.x     |
+| @testing-library/user-event | ^14.x    |
 
 ---
 
@@ -39,6 +42,7 @@ practices**.
 - ✅ **Initial load with Suspense** and animated fallback using Tailwind
 - ✅ **Accessibility enhancements (ARIA roles and attributes, keyboard focus)**
 - ✅ **DnD animation support**
+- ✅ **Comprehensive unit tests with RTL and Vitest**
 
 ---
 
@@ -60,6 +64,18 @@ practices**.
   - Used Zustand’s `onRehydrateStorage` to simulate a 1.5s delay.
   - While rehydrating, the app displays a `<Loading />` fallback with
     `Suspense`.
+
+- ⚙️ The delay time is configurable via `.env` (create this file in root
+  folder):
+
+  ```env
+  VITE_REHYDRATE_DELAY=1500
+  ```
+
+- In tests, a `.env.test` already in the project file:
+  ```
+  VITE_REHYDRATE_DELAY=10
+  ```
 
 ---
 
@@ -85,6 +101,24 @@ This app was built with **screen reader and keyboard users in mind**:
   - Keyboard support: reorder todos using ArrowUp / ArrowDown
 
 ---
+
+## 🧪 Unit Testing
+
+The project uses Vitest and React Testing Library for unit testing.
+
+✅ Tests implemented
+
+- 📦 Rendering and empty state
+
+- ➕ Adding a todo (button click & Enter key)
+
+- ✏️ Editing a todo (save with Enter or button)
+
+- ❌ Canceling edit (Escape key or button)
+
+- 🗑️ Deleting a todo
+
+- ✅ Marking a todo as completed/incomplete
 
 ## 🖱️ Drag and Drop
 
