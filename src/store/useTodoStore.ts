@@ -114,12 +114,13 @@ export const useTodoStore = create<TodoState>()(
         todos: state.todos,
       }),
       onRehydrateStorage: () => (state) => {
+        const delay = import.meta.env.VITE_REHYDRATE_DELAY ?? 1500;
         console.log("⏳ Rehydrating...");
         // Simulates a delay for suspense
         setTimeout(() => {
           console.log("✅ Rehydrated!");
           state?.setHydrated(true);
-        }, 1500); // 👈 1.5s de delay fake
+        }, Number(delay)); // 👈 1.5s de delay fake
       },
     },
   ),
