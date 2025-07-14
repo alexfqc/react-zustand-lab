@@ -73,7 +73,7 @@ practices**.
   ```
 
 - In tests, a `.env.test` already in the project file:
-  ```
+  ```env
   VITE_REHYDRATE_DELAY=10
   ```
 
