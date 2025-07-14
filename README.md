@@ -46,6 +46,19 @@ practices**.
 
 ---
 
+## ⚠️ Requirements
+
+This project requires **Node.js v22.11.0**.
+
+If you use [nvm](https://github.com/nvm-sh/nvm), run:
+
+```bash
+nvm install
+nvm use
+```
+
+---
+
 ## 🧠 Technical Decisions
 
 ### 🟢 Global State with Zustand
