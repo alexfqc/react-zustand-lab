@@ -64,9 +64,16 @@ export default function TodoDnD() {
               ? "border-2 border-dashed border-green-400 bg-green-50"
               : "border-transparent"
           }`}
+          role="list"
+          aria-label="Todo list"
         >
           {todos.map((todo: Todo, index: number) => (
-            <SortableItem key={todo.id} id={todo.id} index={index}>
+            <SortableItem
+              key={todo.id}
+              id={todo.id}
+              index={index}
+              title={todo.title}
+            >
               <TodoItem todo={todo} />
             </SortableItem>
           ))}

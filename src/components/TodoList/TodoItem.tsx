@@ -80,6 +80,12 @@ export default function TodoItem({ todo }: { todo: Todo }) {
               onClick={() => toggleTodo(todo.id)}
               title={todo.completed ? "Mark as incomplete" : "Mark as complete"}
               className={`transition-colors duration-300 hover:text-green-600 ${GREEN_OUTLINE_CLASSES}`}
+              aria-pressed={todo.completed}
+              aria-label={
+                todo.completed
+                  ? "Mark todo as incomplete"
+                  : "Mark todo as complete"
+              }
             >
               {todo.completed ? (
                 <Circle size={16} />
@@ -91,6 +97,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
               onClick={() => startEditing(todo.id, todo.title)}
               title="Edit"
               className={`text-gray-500 transition-colors duration-200 hover:text-green-600 ${GREEN_OUTLINE_CLASSES}`}
+              aria-label={`Edit todo: ${todo.title}`}
             >
               <Pencil size={16} />
             </button>
@@ -98,6 +105,7 @@ export default function TodoItem({ todo }: { todo: Todo }) {
               onClick={() => deleteTodo(todo.id)}
               title="Delete"
               className="transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none"
+              aria-label={`Delete todo: ${todo.title}`}
             >
               <Trash size={16} />
             </button>

@@ -9,10 +9,12 @@ export default function SortableItem({
   id,
   children,
   index,
+  title,
 }: {
   id: number;
   children: ReactNode;
   index: number;
+  title: string;
 }) {
   const { reorderTodos } = useTodoStore();
   const { attributes, listeners, setNodeRef, transform, transition } =
@@ -42,11 +44,14 @@ export default function SortableItem({
           reorderTodos(index, index - 1);
         }
       }}
+      role="listitem"
+      aria-label={`Drag Todo: ${title}`}
     >
       <button
         {...listeners}
         className={`cursor-grab text-gray-400 hover:text-gray-600 ${GREEN_OUTLINE_CLASSES}`}
         title="Drag to reorder"
+        aria-label={`Drag todo: ${title}`}
       >
         <GripVertical size={16} />
       </button>

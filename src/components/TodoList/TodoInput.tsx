@@ -17,6 +17,7 @@ export default function TodoInput() {
           }
         }}
         placeholder="Add a new task..."
+        aria-label="Add a new task"
       />
       <button
         className={`${
