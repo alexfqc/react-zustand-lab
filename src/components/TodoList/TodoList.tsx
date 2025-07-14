@@ -20,6 +20,7 @@ import {
 import SortableItem from "./SortableItem";
 import TodoInput from "./TodoInput";
 import TodoItem from "./TodoItem";
+import { useTodoStore } from "../../store/useTodoStore";
 
 type Todo = {
   id: number;
@@ -28,9 +29,9 @@ type Todo = {
 };
 
 export default function TodoList() {
+  const { editingId, setEditingId } = useTodoStore();
   const [todos, setTodos] = useState<Todo[]>([]);
   const [newTodo, setNewTodo] = useState("");
-  const [editingId, setEditingId] = useState<number>(0);
   const [editingValue, setEditingValue] = useState("");
   const [isDragging, setIsDragging] = useState(false);
 
@@ -62,10 +63,13 @@ export default function TodoList() {
     [todos],
   );
 
-  const startEditing = useCallback((id: number, currentValue: string) => {
-    setEditingId(id);
-    setEditingValue(currentValue);
-  }, []);
+  const startEditing = useCallback(
+    (id: number, currentValue: string) => {
+      setEditingId(id);
+      setEditingValue(currentValue);
+    },
+    [setEditingId],
+  );
 
   const saveEdit = useCallback(() => {
     if (editingValue.trim() === "") return;
@@ -76,12 +80,12 @@ export default function TodoList() {
     );
     setEditingId(0);
     setEditingValue("");
-  }, [todos, editingId, editingValue]);
+  }, [todos, editingId, editingValue, setEditingId]);
 
   const cancelEdit = useCallback(() => {
     setEditingId(0);
     setEditingValue("");
-  }, []);
+  }, [setEditingId]);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
