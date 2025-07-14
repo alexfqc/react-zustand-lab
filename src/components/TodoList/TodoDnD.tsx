@@ -19,12 +19,7 @@ import {
 import SortableItem from "./SortableItem";
 import TodoItem from "./TodoItem";
 import { useTodoStore } from "../../store/useTodoStore";
-
-type Todo = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
+import { type Todo } from "../../types/todo";
 
 export default function TodoDnD() {
   const { todos, setTodos, hydrated } = useTodoStore();

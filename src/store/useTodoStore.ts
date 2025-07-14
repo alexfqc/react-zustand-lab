@@ -1,11 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
-export type Todo = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
+import { type Todo } from "../types/todo";
 
 type TodoState = {
   todos: Todo[];

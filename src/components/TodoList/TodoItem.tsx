@@ -9,12 +9,7 @@ import {
 } from "lucide-react";
 import { GREEN_OUTLINE_CLASSES } from "./constants";
 import { useTodoStore } from "../../store/useTodoStore";
-
-type Todo = {
-  id: number;
-  title: string;
-  completed: boolean;
-};
+import { type Todo } from "../../types/todo";
 
 function TodoItem({ todo }: { todo: Todo }) {
   const {
