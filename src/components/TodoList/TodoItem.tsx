@@ -7,6 +7,7 @@ import {
   Check,
 } from "lucide-react";
 import { GREEN_OUTLINE_CLASSES } from "./constants";
+import { useTodoStore } from "../../store/useTodoStore";
 
 type Todo = {
   id: number;
@@ -14,29 +15,18 @@ type Todo = {
   completed: boolean;
 };
 
-type TodoItemProps = {
-  todo: Todo;
-  isEditing: boolean;
-  editingValue: string;
-  setEditingValue: (value: string) => void;
-  startEditing: (id: number, value: string) => void;
-  saveEdit: () => void;
-  cancelEdit: () => void;
-  toggleTodo: (id: number) => void;
-  deleteTodo: (id: number) => void;
-};
-
-export default function TodoItem({
-  todo,
-  isEditing,
-  editingValue,
-  setEditingValue,
-  startEditing,
-  saveEdit,
-  cancelEdit,
-  toggleTodo,
-  deleteTodo,
-}: TodoItemProps) {
+export default function TodoItem({ todo }: { todo: Todo }) {
+  const {
+    editingId,
+    cancelEdit,
+    startEditing,
+    setEditingValue,
+    saveEdit,
+    toggleTodo,
+    editingValue,
+    deleteTodo,
+  } = useTodoStore();
+  const isEditing = editingId === todo.id;
   return (
     <div className="flex flex-1 cursor-default items-center justify-between gap-2">
       {isEditing ? (

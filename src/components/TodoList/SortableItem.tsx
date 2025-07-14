@@ -3,29 +3,29 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { GripVertical } from "lucide-react";
 import { GREEN_OUTLINE_CLASSES } from "./constants";
+import { useTodoStore } from "../../store/useTodoStore";
 
 export default function SortableItem({
   id,
   children,
-  moveTodo,
   index,
 }: {
   id: number;
   children: ReactNode;
   index: number;
-  moveTodo: (current: number, next: number) => void;
 }) {
+  const { reorderTodos } = useTodoStore();
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id });
 
-  const style = {
+  const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: 50,
     boxShadow: transform ? "0 8px 20px rgba(0,0,0,0.2)" : undefined,
     scale: transform ? 1.05 : 1,
     backgroundColor: "white",
-  } as React.CSSProperties;
+  };
 
   return (
     <li
@@ -36,11 +36,10 @@ export default function SortableItem({
       onKeyDown={(e: React.KeyboardEvent<HTMLLIElement>) => {
         if (e.key === "ArrowDown") {
           e.preventDefault();
-          moveTodo(index, index + 1);
-        }
-        if (e.key === "ArrowUp") {
+          reorderTodos(index, index + 1);
+        } else if (e.key === "ArrowUp") {
           e.preventDefault();
-          moveTodo(index, index - 1);
+          reorderTodos(index, index - 1);
         }
       }}
     >

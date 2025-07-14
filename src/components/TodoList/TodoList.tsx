@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState } from "react";
 import { ListTodo } from "lucide-react";
 import {
   DndContext,
@@ -29,63 +29,8 @@ type Todo = {
 };
 
 export default function TodoList() {
-  const { editingId, setEditingId } = useTodoStore();
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState("");
-  const [editingValue, setEditingValue] = useState("");
+  const { todos, setTodos } = useTodoStore();
   const [isDragging, setIsDragging] = useState(false);
-
-  const addTodo = () => {
-    if (newTodo.trim() !== "") {
-      const todo: Todo = {
-        id: Date.now(),
-        title: newTodo,
-        completed: false,
-      };
-      setTodos([todo, ...todos]);
-      setNewTodo("");
-    }
-  };
-
-  const toggleTodo = useCallback(
-    (id: number) => {
-      setTodos(
-        todos.map((t) => (t.id === id ? { ...t, completed: !t.completed } : t)),
-      );
-    },
-    [todos],
-  );
-
-  const deleteTodo = useCallback(
-    (id: number) => {
-      setTodos(todos.filter((t) => t.id !== id));
-    },
-    [todos],
-  );
-
-  const startEditing = useCallback(
-    (id: number, currentValue: string) => {
-      setEditingId(id);
-      setEditingValue(currentValue);
-    },
-    [setEditingId],
-  );
-
-  const saveEdit = useCallback(() => {
-    if (editingValue.trim() === "") return;
-    setTodos(
-      todos.map((t) =>
-        t.id === editingId ? { ...t, title: editingValue } : t,
-      ),
-    );
-    setEditingId(0);
-    setEditingValue("");
-  }, [todos, editingId, editingValue, setEditingId]);
-
-  const cancelEdit = useCallback(() => {
-    setEditingId(0);
-    setEditingValue("");
-  }, [setEditingId]);
 
   const sensors = useSensors(useSensor(PointerSensor));
 
@@ -98,15 +43,6 @@ export default function TodoList() {
     }
   };
 
-  const moveTodo = useCallback(
-    (fromIndex: number, toIndex: number) => {
-      if (toIndex >= 0 || toIndex < todos.length) {
-        setTodos((prev) => arrayMove(prev, fromIndex, toIndex));
-      }
-    },
-    [todos],
-  );
-
   return (
     <div className="mx-auto flex w-[480px] max-w-full flex-col justify-center p-2 md:pt-10">
       <div className="max-w-full rounded border p-4 shadow">
@@ -114,14 +50,10 @@ export default function TodoList() {
           <ListTodo size={28} className="text-green-500" />
           Todo List
         </h1>
-        <TodoInput
-          newTodo={newTodo}
-          setNewTodo={setNewTodo}
-          addTodo={addTodo}
-        />
+        <TodoInput />
         {todos.length === 0 ? (
           <li className="rounded border border-dashed border-gray-300 p-2 text-center text-gray-400">
-            No todos yet – add one!
+            {"No todos yet \u2013 add one!"}
           </li>
         ) : null}
         <DndContext
@@ -142,40 +74,11 @@ export default function TodoList() {
                   : "border-transparent"
               }`}
             >
-              {useMemo(
-                () =>
-                  todos.map((todo, index) => (
-                    <SortableItem
-                      key={todo.id}
-                      id={todo.id}
-                      moveTodo={moveTodo}
-                      index={index}
-                    >
-                      <TodoItem
-                        todo={todo}
-                        isEditing={editingId === todo.id}
-                        editingValue={editingValue}
-                        setEditingValue={setEditingValue}
-                        startEditing={startEditing}
-                        saveEdit={saveEdit}
-                        cancelEdit={cancelEdit}
-                        toggleTodo={toggleTodo}
-                        deleteTodo={deleteTodo}
-                      />
-                    </SortableItem>
-                  )),
-                [
-                  todos,
-                  editingId,
-                  editingValue,
-                  startEditing,
-                  saveEdit,
-                  cancelEdit,
-                  toggleTodo,
-                  deleteTodo,
-                  moveTodo,
-                ],
-              )}
+              {todos.map((todo: Todo, index: number) => (
+                <SortableItem key={todo.id} id={todo.id} index={index}>
+                  <TodoItem todo={todo} />
+                </SortableItem>
+              ))}
             </ul>
           </SortableContext>
         </DndContext>
