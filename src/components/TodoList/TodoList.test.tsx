@@ -20,7 +20,7 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
     expect(
-      await screen.findByText(/no todos yet – add one!/i),
+      await screen.findByText("No todos yet \u2013 add one!"),
     ).toBeInTheDocument();
   });
 
@@ -28,12 +28,65 @@ describe("TodoList", () => {
     await act(async () => {
       render(<TodoList />);
     });
-    const input = screen.getByPlaceholderText(/add a new task/i);
-    const addButton = screen.getByRole("button", { name: /add/i });
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
 
     await userEvent.type(input, "Coffee specialty coffee");
     await userEvent.click(addButton);
 
     expect(screen.getByText("Coffee specialty coffee")).toBeInTheDocument();
+  });
+
+  it("edits a todo", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
+
+    await userEvent.type(input, "Coffee specialty coffee");
+    await userEvent.click(addButton);
+
+    const editButton = screen.getByRole("button", {
+      name: "Edit todo: Coffee specialty coffee",
+    });
+
+    await userEvent.click(editButton);
+
+    const editInput = screen.getByRole("textbox", {
+      name: "Edit input todo: Coffee specialty coffee",
+    });
+    await userEvent.clear(editInput);
+    await userEvent.type(editInput, "Coffee latte");
+
+    const saveButton = screen.getByRole("button", {
+      name: "Confirm edit todo: Coffee specialty coffee",
+    });
+    await userEvent.click(saveButton);
+
+    const todoItem = screen.getByText("Coffee latte");
+
+    expect(todoItem).toBeInTheDocument();
+  });
+
+  it("deletes a todo", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+    const input = screen.getByTestId("add-todo-input");
+    const addButton = screen.getByTestId("add-todo-button");
+
+    await userEvent.type(input, "Coffee specialty coffee");
+    await userEvent.click(addButton);
+
+    const deleteButton = screen.getByRole("button", {
+      name: "Delete todo: Coffee specialty coffee",
+    });
+    await userEvent.click(deleteButton);
+
+    expect(
+      screen.queryByText("Coffee specialty coffee"),
+    ).not.toBeInTheDocument();
   });
 });

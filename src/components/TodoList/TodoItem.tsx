@@ -46,12 +46,14 @@ function TodoItem({ todo }: { todo: Todo }) {
           }}
           autoFocus
           className="flex-1 rounded border border-gray-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
+          aria-label={`Edit input todo: ${todo.title}`}
         />
       ) : (
         <span
           className={`flex-1 truncate ${
             todo.completed ? "text-gray-400 line-through" : ""
           }`}
+          aria-label={`Todo title: ${todo.title}`}
         >
           {todo.title}
         </span>
@@ -64,6 +66,7 @@ function TodoItem({ todo }: { todo: Todo }) {
               onClick={cancelEdit}
               title="Cancel edit"
               className="transition-colors duration-300 hover:text-red-500 focus:outline-none focus-visible:rounded focus-visible:ring-2 focus-visible:ring-red-500 active:outline-none"
+              aria-label={`Cancel edit todo: ${todo.title}`}
             >
               <CircleX size={16} />
             </button>
@@ -71,6 +74,7 @@ function TodoItem({ todo }: { todo: Todo }) {
               onClick={saveEdit}
               title="Save edit"
               className={`text-gray-500 transition-colors duration-200 hover:text-green-600 ${GREEN_OUTLINE_CLASSES}`}
+              aria-label={`Confirm edit todo: ${todo.title}`}
             >
               <Check size={16} />
             </button>
@@ -89,9 +93,9 @@ function TodoItem({ todo }: { todo: Todo }) {
               }
             >
               {todo.completed ? (
-                <Circle size={16} />
-              ) : (
                 <CircleCheck size={16} />
+              ) : (
+                <Circle size={16} />
               )}
             </button>
             <button

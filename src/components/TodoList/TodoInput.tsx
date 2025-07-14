@@ -18,6 +18,7 @@ export default function TodoInput() {
         }}
         placeholder="Add a new task..."
         aria-label="Add a new task"
+        data-testid="add-todo-input"
       />
       <button
         className={`${
@@ -27,6 +28,7 @@ export default function TodoInput() {
         } rounded px-3 py-1 text-white`}
         onClick={addTodo}
         disabled={!inputText.trim()}
+        data-testid="add-todo-button"
       >
         Add
       </button>
