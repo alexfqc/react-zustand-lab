@@ -3,11 +3,8 @@ import { ListTodo } from "lucide-react";
 import TodoInput from "./TodoInput";
 import TodoDnD from "./TodoDnD";
 import Loading from "./Loading";
-import { useTodoStore } from "../../store/useTodoStore";
 
 export default function TodoList() {
-  const { todos } = useTodoStore();
-
   return (
     <div className="mx-auto flex w-[480px] max-w-full flex-col justify-center p-2 md:pt-10">
       <div className="max-w-full rounded border p-4 shadow">
@@ -16,11 +13,6 @@ export default function TodoList() {
           Todo List
         </h1>
         <TodoInput />
-        {todos.length === 0 ? (
-          <li className="rounded border border-dashed border-gray-300 p-2 text-center text-gray-400">
-            {"No todos yet \u2013 add one!"}
-          </li>
-        ) : null}
         <Suspense fallback={<Loading />}>
           <TodoDnD />
         </Suspense>

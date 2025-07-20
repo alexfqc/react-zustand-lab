@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TodoList from "./TodoList";
 import { useTodoStore } from "../../store/useTodoStore";
@@ -20,7 +20,7 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
     expect(
-      await screen.findByText("No todos yet \u2013 add one!"),
+      screen.getByText("No todos yet \u2013 add one!"),
     ).toBeInTheDocument();
   });
 
@@ -28,25 +28,51 @@ describe("TodoList", () => {
     await act(async () => {
       render(<TodoList />);
     });
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
-    expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    });
   });
 
   it("adds a new todo pressing enter", async () => {
     await act(async () => {
       render(<TodoList />);
     });
-    const input = screen.getByTestId("add-todo-input");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.keyboard("{Enter}");
 
-    expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    });
+  });
+
+  it("should not a new todo pressing enter when input is empty", async () => {
+    await act(async () => {
+      render(<TodoList />);
+    });
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+
+    addInput.focus();
+    await userEvent.keyboard("{Enter}");
+
+    expect(
+      screen.getByText("No todos yet \u2013 add one!"),
+    ).toBeInTheDocument();
   });
 
   it("edits a todo pressing enter", async () => {
@@ -54,10 +80,14 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
 
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const editButton = screen.getByRole("button", {
@@ -84,10 +114,14 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
 
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const editButton = screen.getByRole("button", {
@@ -117,10 +151,14 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
 
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const editButton = screen.getByRole("button", {
@@ -150,10 +188,14 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
 
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const editButton = screen.getByRole("button", {
@@ -179,10 +221,14 @@ describe("TodoList", () => {
     await act(async () => {
       render(<TodoList />);
     });
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const deleteButton = screen.getByRole("button", {
@@ -198,10 +244,14 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
 
-    const input = screen.getByTestId("add-todo-input");
-    const addButton = screen.getByTestId("add-todo-button");
+    const addInput = screen.getByRole("textbox", {
+      name: "Add task input",
+    });
+    const addButton = screen.getByRole("button", {
+      name: "Add task button",
+    });
 
-    await userEvent.type(input, "Buy specialty coffee");
+    await userEvent.type(addInput, "Buy specialty coffee");
     await userEvent.click(addButton);
 
     const markButton = screen.getByRole("button", {
