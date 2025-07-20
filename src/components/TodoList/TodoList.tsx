@@ -3,11 +3,8 @@ import { ListTodo } from "lucide-react";
 import TodoInput from "./TodoInput";
 import TodoDnD from "./TodoDnD";
 import Loading from "./Loading";
-import { useTodoStore } from "../../store/useTodoStore";
 
 export default function TodoList() {
-  const { todos } = useTodoStore();
-
   return (
     <div className="mx-auto flex w-[480px] max-w-full flex-col justify-center p-2 md:pt-10">
       <div className="max-w-full rounded border p-4 shadow">

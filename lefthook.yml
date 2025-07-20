@@ -1,0 +1,15 @@
+pre-commit:
+  parallel: true
+  commands:
+    lint:
+      run: npm run lint
+    prettier:
+      run: npm run format:check
+    type-check:
+      run: npm run type-check
+
+pre-push:
+  parallel: false
+  commands:
+    tests:
+      run: npm run test
