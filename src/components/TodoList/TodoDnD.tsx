@@ -1,10 +1,16 @@
 import { lazy } from "react";
 import { useTodoStore } from "../../store/useTodoStore";
+import { useShallow } from "zustand/react/shallow";
 
 const TodoDnDContent = lazy(() => import("./TodoDnDContent"));
 
 export default function TodoDnD() {
-  const { todos, hydrated } = useTodoStore();
+  const { todos, hydrated } = useTodoStore(
+    useShallow((state) => ({
+      todos: state.todos,
+      hydrated: state.hydrated,
+    })),
+  );
 
   if (!hydrated) {
     throw Promise.resolve();
