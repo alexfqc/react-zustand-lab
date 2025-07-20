@@ -1,7 +1,7 @@
 import { useTodoStore } from "../../store/useTodoStore";
 
 export default function TodoInput() {
-  const { addTodo, setInputText, inputText } = useTodoStore();
+  const { addTodo, setInputText, inputText, hydrated } = useTodoStore();
   return (
     <div className="mb-4 flex gap-2">
       <input
@@ -12,13 +12,15 @@ export default function TodoInput() {
           setInputText(e.target.value)
         }
         onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-          if (e.key === "Enter") {
+          if (e.key === "Enter" && inputText.trim() !== "") {
             addTodo();
           }
         }}
         placeholder="Add a new task..."
-        aria-label="Add a new task"
-        data-testid="add-todo-input"
+        aria-label="Add task input"
+        aria-disabled={!hydrated}
+        aria-invalid={inputText.trim() === ""}
+        disabled={!hydrated}
       />
       <button
         className={`${
@@ -27,8 +29,10 @@ export default function TodoInput() {
             : "cursor-default bg-green-300"
         } rounded px-3 py-1 text-white`}
         onClick={addTodo}
-        disabled={!inputText.trim()}
-        data-testid="add-todo-button"
+        disabled={!hydrated || !inputText.trim()}
+        aria-disabled={!hydrated || !inputText.trim()}
+        aria-label="Add task button"
+        type="button"
       >
         Add
       </button>
