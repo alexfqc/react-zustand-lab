@@ -41,6 +41,14 @@ export default function TodoDnD() {
     }
   };
 
+  if (todos.length === 0) {
+    return (
+      <li className="rounded border border-dashed border-gray-300 p-2 text-center text-gray-400">
+        {"No todos yet \u2013 add one!"}
+      </li>
+    );
+  }
+
   return (
     <DndContext
       sensors={sensors}
