@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TodoList from "./TodoList";
 import { useTodoStore } from "../../store/useTodoStore";
@@ -20,7 +20,7 @@ describe("TodoList", () => {
       render(<TodoList />);
     });
     expect(
-      await screen.findByText("No todos yet \u2013 add one!"),
+      screen.getByText("No todos yet \u2013 add one!"),
     ).toBeInTheDocument();
   });
 
@@ -34,7 +34,9 @@ describe("TodoList", () => {
     await userEvent.type(input, "Buy specialty coffee");
     await userEvent.click(addButton);
 
-    expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    });
   });
 
   it("adds a new todo pressing enter", async () => {
@@ -46,7 +48,9 @@ describe("TodoList", () => {
     await userEvent.type(input, "Buy specialty coffee");
     await userEvent.keyboard("{Enter}");
 
-    expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText("Buy specialty coffee")).toBeInTheDocument();
+    });
   });
 
   it("edits a todo pressing enter", async () => {
